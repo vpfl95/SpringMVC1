@@ -6,7 +6,11 @@ import hello.SpringMVC1.web.frontcontroller.v3.ControllerV3;
 import hello.SpringMVC1.web.frontcontroller.v3.controller.MemberFormControllerV3;
 import hello.SpringMVC1.web.frontcontroller.v3.controller.MemberListControllerV3;
 import hello.SpringMVC1.web.frontcontroller.v3.controller.MemberSaveControllerV3;
+import hello.SpringMVC1.web.frontcontroller.v4.controller.MemberFormControllerV4;
+import hello.SpringMVC1.web.frontcontroller.v4.controller.MemberListControllerV4;
+import hello.SpringMVC1.web.frontcontroller.v4.controller.MemberSaveControllerV4;
 import hello.SpringMVC1.web.frontcontroller.v5.adapter.ControllerV3HandlerAdapter;
+import hello.SpringMVC1.web.frontcontroller.v5.adapter.ControllerV4HandlerAdapter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,10 +38,16 @@ public class FrontControllerServletV5 extends HttpServlet {
         handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members", new MemberListControllerV3());
+        
+        //V4 추가
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberSaveControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members", new MemberListControllerV4());
     }
 
     private void initHandlerAdapters() {
         handlerAdapters.add(new ControllerV3HandlerAdapter());
+        handlerAdapters.add(new ControllerV4HandlerAdapter());
     }
 
     @Override
@@ -52,14 +62,13 @@ public class FrontControllerServletV5 extends HttpServlet {
             return;
         }
         
-        //2. 핸들러를 처리할 수 있느 핸들러어댑터 조회
+        //2. handlerAdapters에서 핸들러를 처리할 수 있느 핸들러어댑터 조회
         //ControllerV3HandlerAdapter 반환
         MyHandlerAdapter adapter = getHandlerAdapter(handler);
 
         //3.handle() 호출
         //ModelView 반환
         ModelView mv = adapter.handle(request, response, handler);
-
 
         // viewResolver 호출
         String viewName = mv.getViewName();// 논리이름 new-form
